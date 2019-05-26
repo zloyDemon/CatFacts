@@ -2,26 +2,54 @@ package com.company.mbtest
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.view.TextureView
+import android.support.design.widget.BottomNavigationView
+import android.support.v4.app.Fragment
 import android.view.View
-import android.widget.TextView
-import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-    private var imageUrl = "https://i.pinimg.com/236x/d3/70/ba/d370bad2408c44e7596504f3796be999--fairies-fairy-tail.jpg"
+    private var factsFragment =  FactsFragment();
+    private var favouritesFragment =  FavouritesFragment();
+
+    private lateinit var currentFragment : Fragment
+
+    private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
+        when (item.itemId) {
+            R.id.new_cat_fact -> {
+                currentFragment = factsFragment
+                changeFragment(factsFragment)
+                return@OnNavigationItemSelectedListener true
+            }
+            R.id.favorites -> {
+                changeFragment(favouritesFragment)
+                currentFragment = favouritesFragment
+                return@OnNavigationItemSelectedListener true
+            }
+        }
+        false
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        createListeners()
+        changeFragment(factsFragment)
+    }
 
-        textViewId.setOnClickListener {view -> onTextClick(view) }
+    /**
+     * Create a view listeners
+     */
+    private fun createListeners(){
+        bottomNavView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
+
     }
 
     private fun onTextClick(view: View){
-        (view as TextView).text = "Clicked"
-        var iv = imageViewId;
-        Glide.with(this).load(imageUrl).into(iv)
+
+    }
+
+    private fun changeFragment(fragment: Fragment){
+        supportFragmentManager.beginTransaction().replace(R.id.fragmentContainer, fragment).commit()
     }
 }
