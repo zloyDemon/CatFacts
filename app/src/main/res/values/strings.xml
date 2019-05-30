@@ -3,8 +3,7 @@
 
     <string name="cat_facts_bottom_menu">Факты</string>
     <string name="favorites_facts_bottom_menu">Избранные</string>
-    <string name="title_activity_main2">Main2Activity</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="add_btn">Добавить</string>
+    <string name="delete_btn">Удалить</string>
+    <string name="fact_detail_activity">Подробнее</string>
 </resources>

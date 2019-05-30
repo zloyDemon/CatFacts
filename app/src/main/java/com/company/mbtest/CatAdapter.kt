@@ -8,11 +8,17 @@ import android.widget.Adapter
 import android.widget.TextView
 import kotlinx.android.synthetic.main.item_cat_fact.view.*
 
-class CatAdapter (private val cats : List<CatFactModel>?) : RecyclerView.Adapter<CatViewHolder>(){
+interface OnItemClicked{
+    fun onClickItem(catFactModel: CatFactModel, index : Int)
+}
+
+class CatAdapter (private val cats : MutableList<CatFactModel>?, onClickItemListener : OnItemClicked) : RecyclerView.Adapter<CatViewHolder>(){
+
+    private var onClickItemListener = onClickItemListener
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, p1: Int): CatViewHolder {
         val itemView = LayoutInflater.from(viewGroup.context).inflate(R.layout.item_cat_fact, viewGroup, false)
-        return CatViewHolder(itemView)
+        return CatViewHolder(itemView, onClickItemListener)
     }
 
     override fun getItemCount(): Int {
@@ -20,19 +26,23 @@ class CatAdapter (private val cats : List<CatFactModel>?) : RecyclerView.Adapter
     }
 
     override fun onBindViewHolder(catViewHolder: CatViewHolder, position: Int) {
-        cats?.get(position)?.let { catViewHolder.bindData(it) }
+        cats?.get(position)?.let { catViewHolder.bindData(it, position) }
     }
-
 }
 
-class CatViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView){
-    private var  catFactText : TextView
+class CatViewHolder(itemView : View, onClickItemListener: OnItemClicked) : RecyclerView.ViewHolder(itemView){
+
+    private var onClickItemListener = onClickItemListener
+    private var catFactText : TextView = itemView.catFact
+    private lateinit var currentCatFact : CatFactModel
 
     init {
-        catFactText = itemView.catFact;
+        itemView.setOnClickListener {this.onClickItemListener.onClickItem(currentCatFact, adapterPosition) }
     }
 
-    public fun bindData(catFactModel: CatFactModel){
+    fun bindData(catFactModel: CatFactModel, position: Int){
         catFactText.text = catFactModel.text;
+        currentCatFact = catFactModel
     }
 }
+
